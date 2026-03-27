@@ -1,0 +1,210 @@
+{
+  "info": {
+    "name": "Travel Planner API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Projects",
+      "item": [
+        {
+          "name": "List all projects",
+          "request": {
+            "method": "GET",
+            "url": "http://127.0.0.1:8000/api/project/"
+          }
+        },
+        {
+          "name": "Get single project",
+          "request": {
+            "method": "GET",
+            "url": "http://127.0.0.1:8000/api/project/1/"
+          }
+        },
+        {
+          "name": "Create project (no places)",
+          "request": {
+            "method": "POST",
+            "url": "http://127.0.0.1:8000/api/project/",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Paris Trip\",\n  \"description\": \"My dream trip\",\n  \"start_date\": \"2026-06-01\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Create project (with places)",
+          "request": {
+            "method": "POST",
+            "url": "http://127.0.0.1:8000/api/project/",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Chicago Art Trip\",\n  \"description\": \"Visiting art galleries\",\n  \"start_date\": \"2026-07-01\",\n  \"places\": [\n    {\n      \"external_id\": 129452,\n      \"notes\": \"Must see this painting\"\n    },\n    {\n      \"external_id\": 129453,\n      \"notes\": \"Amazing sculpture\"\n    }\n  ]\n}"
+            }
+          }
+        },
+        {
+          "name": "Update project",
+          "request": {
+            "method": "PATCH",
+            "url": "http://127.0.0.1:8000/api/project/1/",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Updated Trip Name\",\n  \"description\": \"Updated description\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Delete project",
+          "request": {
+            "method": "DELETE",
+            "url": "http://127.0.0.1:8000/api/project/1/"
+          }
+        },
+        {
+          "name": "Delete project (with visited places - should fail)",
+          "request": {
+            "method": "DELETE",
+            "url": "http://127.0.0.1:8000/api/project/1/"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Places",
+      "item": [
+        {
+          "name": "List places for project",
+          "request": {
+            "method": "GET",
+            "url": "http://127.0.0.1:8000/api/project/1/places/"
+          }
+        },
+        {
+          "name": "Get single place in project",
+          "request": {
+            "method": "GET",
+            "url": "http://127.0.0.1:8000/api/project/1/places/3/"
+          }
+        },
+        {
+          "name": "Add place to project",
+          "request": {
+            "method": "POST",
+            "url": "http://127.0.0.1:8000/api/place/",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"project\": 1,\n  \"external_id\": 129452,\n  \"notes\": \"Must see this painting\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Add duplicate place (should fail)",
+          "request": {
+            "method": "POST",
+            "url": "http://127.0.0.1:8000/api/place/",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"project\": 1,\n  \"external_id\": 129452,\n  \"notes\": \"Duplicate place\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Add 11th place (should fail)",
+          "request": {
+            "method": "POST",
+            "url": "http://127.0.0.1:8000/api/place/",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"project\": 1,\n  \"external_id\": 999999,\n  \"notes\": \"This should fail\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Update place notes",
+          "request": {
+            "method": "PATCH",
+            "url": "http://127.0.0.1:8000/api/place/3/",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"notes\": \"Updated notes\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Mark place as visited",
+          "request": {
+            "method": "PATCH",
+            "url": "http://127.0.0.1:8000/api/place/3/",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"is_visited\": true\n}"
+            }
+          }
+        },
+        {
+          "name": "Delete place",
+          "request": {
+            "method": "DELETE",
+            "url": "http://127.0.0.1:8000/api/place/3/"
+          }
+        },
+        {
+          "name": "Delete visited place (should fail)",
+          "request": {
+            "method": "DELETE",
+            "url": "http://127.0.0.1:8000/api/place/3/"
+          }
+        }
+      ]
+    }
+  ]
+}
