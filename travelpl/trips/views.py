@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from rest_framework import viewsets, status
 from rest_framework.response import Response
 from .models import TravelProject, Place
@@ -21,9 +21,9 @@ class PlaceViewSet(viewsets.ModelViewSet):
 
     def perform_create(self, serializer):
         project_id = self.request.data.get('project')
-        project = TravelProject.objects.get(pk=project_id)
+        project = get_object_or_404(TravelProject, pk=project_id)
 
-        if project.places.count() > 10:
+        if project.places.count() >= 10:
             raise ValidationError('Максимум 10 місць у проекті')
 
         instance = serializer.save(project=project)

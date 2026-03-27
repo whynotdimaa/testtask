@@ -19,7 +19,7 @@ class TravelProject(models.Model):
         return self.name
 
 class Place(models.Model):
-    project = models.ForeignKey(TravelProject, on_delete=models.CASCADE)
+    project = models.ForeignKey(TravelProject, on_delete=models.CASCADE, related_name='places')
     external_id = models.IntegerField()
     notes = models.TextField()
     is_visited = models.BooleanField(default=False)
