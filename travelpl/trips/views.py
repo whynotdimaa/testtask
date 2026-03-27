@@ -12,7 +12,10 @@ class ProjectViewSet(viewsets.ModelViewSet):
     def destroy(self, request, *args, **kwargs):
         project = self.get_object()
         if project.places.filter(is_visited=True).exists():
-            return Response("error, Не можна видалити проект де вже відвідані місця", status=status.HTTP_400_BAD_REQUEST)
+            return Response(
+                {"error": "Не можна видалити проект де вже відвідані місця"},
+                status=status.HTTP_400_BAD_REQUEST
+            )
         return super().destroy(request, *args, **kwargs)
 
 class PlaceViewSet(viewsets.ModelViewSet):
@@ -27,8 +30,29 @@ class PlaceViewSet(viewsets.ModelViewSet):
             raise ValidationError('Максимум 10 місць у проекті')
 
         instance = serializer.save(project=project)
-        instance.project.update_completion_status()
+        instance.project.update()
 
     def perform_update(self, serializer):
         instance = serializer.save()
-        instance.project.update_completion_status()
+        instance.project.update()
+
+    def destroy(self, request, *args, **kwargs):  # ← цього не було
+        place = self.get_object()
+        if place.is_visited:
+            return Response(
+                {"error": "Не можна видалити відвідане місце"},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+        return super().destroy(request, *args, **kwargs)
+
+    def list_by_project(self, request,project_id= None):
+        project = get_object_or_404(TravelProject, pk=project_id)
+        places =project.places.all()
+        serializer = PlaceSerializer(places, many=True)
+        return Response(serializer.data)
+
+    def retrieve_by_project(self, request, project_id=None, pk=None):
+        project = get_object_or_404(TravelProject, pk=project_id)
+        place = get_object_or_404(Place, pk=pk, project=project)
+        serializer = PlaceSerializer(place)
+        return Response(serializer.data)

@@ -26,6 +26,10 @@ class ProjectSerializer(serializers.ModelSerializer):
         model = TravelProject
         fields = ['id', 'name', 'description', 'start_date', 'is_completed', 'places']
         read_only_fields = ['is_completed']
+        extra_kwargs = {
+            'description': {'required': False},
+            'start_date': {'required': False, 'allow_null': True},
+        }
 
     def create(self, validated_data):
         places_data = validated_data.pop('places', [])

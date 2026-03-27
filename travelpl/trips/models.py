@@ -2,8 +2,8 @@ from django.db import models
 
 class TravelProject(models.Model):
     name = models.CharField(max_length=200)
-    description = models.TextField()
-    start_date = models.DateField()
+    description = models.TextField(blank=True, default='')
+    start_date = models.DateField(null=True, blank=True)
     is_completed = models.BooleanField(default=False)
 
     def update(self):
